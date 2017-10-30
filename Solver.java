@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Scanner;
 
 public class Solver {
-    static DecimalFormat decimalFormat = new DecimalFormat("#.######");
+    static DecimalFormat decimalFormat = new DecimalFormat("#.###");
     static ArrayList<Integer> rows;
 
     public static void main(String[] args) throws FileNotFoundException{
@@ -16,6 +16,7 @@ public class Solver {
         String option;
         double[][] equations;
 
+        //Main menu loop
         while(true){
             order = -1;
 
@@ -73,6 +74,8 @@ public class Solver {
                 eq[i][j] = in.nextDouble();
             }
         }
+
+        in.nextLine();
     }
 
     public static void fileInput(int n, double[][] eq, Scanner in) throws FileNotFoundException{
@@ -80,12 +83,19 @@ public class Solver {
 
         in = new Scanner(System.in);
 
-        System.out.print("Provide a valid file name: ");
-        fileName = in.nextLine();
+        while(true) {
+            System.out.print("Provide a valid file name: ");
+            fileName = in.nextLine();
 
-        File inputFile = new File(fileName);
+            File inputFile = new File(fileName);
 
-        in = new Scanner(inputFile);
+            if (!inputFile.exists()) {
+                System.out.println("Error: File does not exist.");
+            } else {
+                in = new Scanner(inputFile);
+                break;
+            }
+        }
 
         for(int i = 0; i < n; ++i){
             for(int j = 0; j <= n; ++j){
@@ -124,6 +134,7 @@ public class Solver {
             scaleIndex = 0;
             scaleVector = new double[n - i];
 
+            //Filling the scale vector array using unvisited equations
             for(int j = 0; j < n; ++j){
                 if(!visited[j]){
                     scaleVector[scaleIndex] = Math.abs(eq[j][i] / maxVector[j]);
@@ -134,6 +145,7 @@ public class Solver {
             }
 
             visited[pivotRow] = true;
+
             backSequence.add(pivotRow);
             rows.remove(rows.indexOf(pivotRow));
 
